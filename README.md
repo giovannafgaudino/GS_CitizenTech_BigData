@@ -83,8 +83,8 @@ Prints da execução real no Airflow (Docker) com os 3 arquivos oficiais do SP15
 | 4 | `04_silver_sp156.png` | Log do silver: linhas lidas, fora de escopo, classificadas por categoria e sem subprefeitura. |
 | 5 | `05_validar_qualidade.png` | Log do gate de qualidade: os 19 checks em `OK` (PK/FK, completude, domínio, coordenadas, LGPD). |
 | 6 | `06_carregar_dw.png` | Log da carga no Data Warehouse com a contagem de linhas por tabela (`fato_solicitacao_sp156` = 472.524). |
-| 07 | `07_contagem_solicitacao.png` | Contagem de linhas em `fato_solicitacao_sp156` no DW (472.524, sem duplicidade) |
-| 08 | `08_idempotencia_reexecucao.png` | Mesma contagem após Clear/reexecução da DAG: continua 472.524 |
+| 7 | `07_contagem_solicitacao.png` | Contagem de linhas em `fato_solicitacao_sp156` no DW (472.524, sem duplicidade) |
+| 8 | `08_idempotencia_reexecucao.png` | Mesma contagem após Clear/reexecução da DAG: continua 472.524 |
 
 ![Graph da DAG](docs/evidencias/01_AirFlow_dag_graph.png)
 
