@@ -1,7 +1,11 @@
 """Carga da camada gold no Data Warehouse (PostgreSQL no Docker; SQLite no modo local).
 
-Idempotência: dimensões são recriadas (full refresh); fatos e marts removem a partição dt_ingestao=ds
-antes de inserir, então reexecutar o mesmo dia não duplica linhas.
+Idempotência (reexecutar não duplica linhas, nem em datas lógicas diferentes):
+  * dimensões: recriadas a cada execução (full refresh);
+  * SP156 (fato + mart de demanda): o arquivo oficial é um retrato completo do ano, não um lote do dia. Por isso a carga
+    SUBSTITUI o conteúdo inteiro dessas tabelas. Particionar por data de execução repetiria o histórico a cada run diário;
+  * reportes do app (fato + mart de triagem): são lotes diários, então a carga remove só a partição dt_ingestao=ds antes de inserir.
+
 """
 from __future__ import annotations
 
@@ -13,7 +17,8 @@ from . import config
 from .utils import ler, log
 
 DIMENSOES = ["dim_data", "dim_subprefeitura", "dim_categoria"]
-PARTICIONADAS = ["fato_solicitacao_sp156", "fato_reporte", "mart_demanda_subprefeitura_mes", "mart_triagem_ia"]
+SNAPSHOT = ["fato_solicitacao_sp156", "mart_demanda_subprefeitura_mes"]   # substituídas por inteiro a cada carga
+PARTICIONADAS = ["fato_reporte", "mart_triagem_ia"]                         # lote diário: remove só dt_ingestao=ds
 
 
 def _conectar():
@@ -48,17 +53,19 @@ def carregar_warehouse(ds: str) -> dict:
             df = ler(base / nome)
             df.to_sql(nome, con, if_exists="replace", index=False, **kw)
             carregadas[nome] = len(df)
-        for nome in PARTICIONADAS:
+        for nome in SNAPSHOT + PARTICIONADAS:
             df = ler(base / nome)
+            snapshot = nome in SNAPSHOT
             if _tabela_existe(con, kind, nome):
+                sql = f"DELETE FROM {nome}" if snapshot else f"DELETE FROM {nome} WHERE dt_ingestao = :ds"
                 if kind == "sqlite":
-                    con.execute(f"DELETE FROM {nome} WHERE dt_ingestao = ?", (ds,))
+                    con.execute(sql.replace(":ds", "?"), () if snapshot else (ds,))
                     con.commit()
                 else:
                     from sqlalchemy import text
 
                     with con.begin() as c:
-                        c.execute(text(f"DELETE FROM {nome} WHERE dt_ingestao = :ds"), {"ds": ds})
+                        c.execute(text(sql), {} if snapshot else {"ds": ds})
             df.to_sql(nome, con, if_exists="append", index=False, **kw)
             carregadas[nome] = len(df)
         if kind == "sqlite":
@@ -77,7 +84,7 @@ def contagens() -> dict:
     con, kind, eng = _conectar()
     try:
         out = {}
-        for nome in DIMENSOES + PARTICIONADAS:
+        for nome in DIMENSOES + SNAPSHOT + PARTICIONADAS:
             if kind == "sqlite":
                 out[nome] = con.execute(f"SELECT COUNT(*) FROM {nome}").fetchone()[0]
             else:

@@ -91,8 +91,10 @@ Os mesmos números aparecem no PDF [`docs/CidadeViva_Arquitetura_e_Dicionario_de
 
 ## Decisões de projeto
 
-* **Idempotência** — toda task recebe só a data lógica (`ds`); bronze/silver/gold gravam em `dt=<ds>`, e a carga apaga
-  a partição `dt_ingestao=<ds>` antes de inserir. Rodar o mesmo dia duas vezes não duplica linhas (coberto por teste).
+* **Idempotência** — toda task recebe só a data lógica (`ds`); bronze/silver/gold gravam em `dt=<ds>`. Na carga, o SP156
+  (um retrato completo do ano, não um lote do dia) **substitui** `fato_solicitacao_sp156` e o mart de demanda; os reportes do app
+  (lote diário) removem só a partição `dt_ingestao=<ds>`. Assim, rodar a DAG de novo, na mesma data ou em outra, não duplica
+  o histórico (coberto por testes).
 * **Dados não trafegam por XCom** — o contrato entre tasks é o data lake em disco (Parquet quando há `pyarrow`).
 * **Qualidade como gate** — `validar_qualidade` (19 verificações: PK/FK, completude, domínio, coordenadas, LGPD) falha a
   DAG antes da carga se algo estiver errado. Relatório em `data/gold/dt=<ds>/_dq_report.json`.
@@ -133,3 +135,4 @@ sql/consultas_exemplo.sql     consultas que o MVP executa
 tests/                        pytest (utils + pipeline ponta a ponta + idempotência)
 docs/                         diagrama, log de execução, gerador do PDF
 docker-compose.yml            Airflow + Postgres (metadados) + Postgres (DW)
+```
