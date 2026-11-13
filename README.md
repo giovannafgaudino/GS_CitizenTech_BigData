@@ -18,7 +18,7 @@ plataforma colaborativa de zeladoria urbana. Todo o stack é gratuito/open-sourc
 
 | Fonte | Origem | Uso no MVP |
 |---|---|---|
-| **SP156** | Portal de Dados Abertos da Prefeitura de SP (CSV trimestral, licença CC0) | Histórico real de demanda por subprefeitura/categoria → mapa de calor, priorização, tempo de resposta esperado |
+| **SP156** | Portal de Dados Abertos da Prefeitura de SP, obtido pela **API do portal (CKAN)** com os CSVs locais como alternativa (CSV trimestral, licença CC0) | Histórico real de demanda por subprefeitura/categoria → mapa de calor, priorização, tempo de resposta esperado |
 | **Reportes CidadeViva** | API de exportação do app (ou simulador, ver abaixo) | Triagem por IA (categoria + confiança), fila de revisão humana, envio pelo RPA |
 | **Referências** | `seeds/` (subprefeituras, categorias, regras de classificação) | Dimensões e taxonomia única entre as duas fontes |
 
@@ -52,15 +52,19 @@ Após o *Trigger*, as 10 tasks devem ficar verdes e as tabelas aparecem no schem
 
 ### B) Sem Airflow (rápido, usa SQLite) — com os dados reais
 
-Baixe os CSVs do SP156 **pelo navegador** em <https://dados.prefeitura.sp.gov.br/dataset/dados-do-sp156> (o portal pode
-bloquear download por script) e coloque em `data/raw/`. Os arquivos usados na entrega foram `arquivo-final-1/2/3-trim-26.csv`.
+Por padrão (`SP156_FONTE=auto`) o `run_local.py` também tenta primeiro a API do portal e, se ela falhar, usa os CSVs de
+`SP156_LOCAL_PATH`. Para garantir o *fallback*, baixe os CSVs **pelo navegador** em
+<https://dados.prefeitura.sp.gov.br/dataset/dados-do-sp156> e coloque em `data/raw/` (o portal pode bloquear download por
+script). Os arquivos usados na entrega foram `arquivo-final-1/2/3-trim-26.csv`. Para usar só os arquivos locais:
+`export SP156_FONTE=local`.
 
 ```bash
 pip install -r requirements.txt
 export SP156_LOCAL_PATH="data/raw/arquivo-final-*-trim-26.csv"      # aceita glob, vários arquivos ou vírgulas
 python scripts/run_local.py --ds 2026-11-12                          # ~1 min, ~500 MB de RAM
 sqlite3 data/cidadeviva_dw.sqlite < sql/consultas_exemplo.sql        # ou abra o .sqlite no DBeaver
-python docs/gerar_pdf.py                                             # regera o PDF com os números da SUA execução
+python docs/gerar_pdf.py                                             # regera o PDF (ABNT) com os números da SUA execução
+python docs/gerar_docx.py                                            # idem em Word (.docx)
 pytest -q                                                            # 13 testes (usam amostra sintética/fixtures de propósito)
 ```
 
