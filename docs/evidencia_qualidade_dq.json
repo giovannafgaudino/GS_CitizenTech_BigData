@@ -1,0 +1,102 @@
+{
+ "ds": "2026-11-12",
+ "total": 19,
+ "falhas": 0,
+ "checks": [
+  {
+   "check": "fato_solicitacao_sp156 não vazia",
+   "ok": true,
+   "detalhe": "472524 linhas"
+  },
+  {
+   "check": "fato_reporte não vazia",
+   "ok": true,
+   "detalhe": "400 linhas"
+  },
+  {
+   "check": "PK única em fato_solicitacao_sp156",
+   "ok": true,
+   "detalhe": ""
+  },
+  {
+   "check": "PK única em fato_reporte",
+   "ok": true,
+   "detalhe": ""
+  },
+  {
+   "check": "PK única em dim_subprefeitura",
+   "ok": true,
+   "detalhe": ""
+  },
+  {
+   "check": "PK única em dim_data",
+   "ok": true,
+   "detalhe": ""
+  },
+  {
+   "check": "FK subprefeitura válida (sp156)",
+   "ok": true,
+   "detalhe": ""
+  },
+  {
+   "check": "FK categoria válida (sp156)",
+   "ok": true,
+   "detalhe": ""
+  },
+  {
+   "check": "FK data válida (sp156)",
+   "ok": true,
+   "detalhe": ""
+  },
+  {
+   "check": "FK subprefeitura válida (reporte)",
+   "ok": true,
+   "detalhe": ""
+  },
+  {
+   "check": "FK categoria válida (reporte)",
+   "ok": true,
+   "detalhe": ""
+  },
+  {
+   "check": "FK data válida (reporte)",
+   "ok": true,
+   "detalhe": ""
+  },
+  {
+   "check": "≥ 80% das solicitações SP156 com subprefeitura",
+   "ok": true,
+   "detalhe": "99.5%"
+  },
+  {
+   "check": "campos obrigatórios do reporte sem nulos",
+   "ok": true,
+   "detalhe": ""
+  },
+  {
+   "check": "confiança da IA entre 0 e 1",
+   "ok": true,
+   "detalhe": ""
+  },
+  {
+   "check": "tempo de resposta SP156 ≥ 0",
+   "ok": true,
+   "detalhe": ""
+  },
+  {
+   "check": "coordenadas dos reportes dentro de SP",
+   "ok": true,
+   "detalhe": ""
+  },
+  {
+   "check": "sem PII (e-mail/telefone) em fato_reporte.descricao",
+   "ok": true,
+   "detalhe": ""
+  },
+  {
+   "check": "sem colunas de nome/e-mail em fato_reporte",
+   "ok": true,
+   "detalhe": ""
+  }
+ ]
+}

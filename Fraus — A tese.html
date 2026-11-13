@@ -1,0 +1,454 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Fraus — A tese</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@112,600;112,800;125,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: cofre — uma coluna larga de leitura sobre azul-noite, números em blocos de "painel de segurança" e um alerta de WhatsApp como peça central */
+:root {
+  --bg: #0a1224;
+  --surface: #111c34;
+  --surface-2: #17264a;
+  --line: #24365e;
+  --fg: #e8eefc;
+  --muted: #9aaacb;
+  --accent: #3d8bff;
+  --accent-ink: #061026;
+  --accent-soft: rgba(61,139,255,.14);
+  --risk: #ff6b6b;
+  --ok: #4fd18b;
+  --chat-bg: #0e1a30;
+  --bubble-them: #17264a;
+  --bubble-me: #1f3e78;
+  --display: "Archivo", "Arial Narrow", system-ui, sans-serif;
+  --body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg: #f3f6fc; --surface: #ffffff; --surface-2: #e8eef9; --line: #cfd9ee;
+    --fg: #0b1630; --muted: #4d5e80; --accent: #1360e0; --accent-ink: #ffffff;
+    --accent-soft: rgba(19,96,224,.10); --risk: #c93434; --ok: #1d8a52;
+    --chat-bg: #e8eef9; --bubble-them: #ffffff; --bubble-me: #d5e4ff;
+    color-scheme: light;
+  }
+}
+:root[data-theme="light"] {
+  --bg: #f3f6fc; --surface: #ffffff; --surface-2: #e8eef9; --line: #cfd9ee;
+  --fg: #0b1630; --muted: #4d5e80; --accent: #1360e0; --accent-ink: #ffffff;
+  --accent-soft: rgba(19,96,224,.10); --risk: #c93434; --ok: #1d8a52;
+  --chat-bg: #e8eef9; --bubble-them: #ffffff; --bubble-me: #d5e4ff;
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg);
+  font-family: var(--body); font-size: 16px; line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap {
+  max-width: 1080px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+section { padding-block: clamp(56px, 9vw, 104px); border-top: 1px solid var(--line); }
+section:first-of-type { border-top: 0; }
+
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; letter-spacing: -.01em; }
+h2 { font-size: clamp(28px, 4.2vw, 44px); line-height: 1.08; font-weight: 800; font-stretch: 112%; max-width: 22ch; }
+h3 { font-size: 19px; font-weight: 600; font-stretch: 112%; line-height: 1.25; }
+p { margin: 0; }
+.eyebrow {
+  font-family: var(--mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--accent); display: block; margin-bottom: 16px;
+}
+.lede { color: var(--muted); font-size: 18px; max-width: 62ch; margin-top: 18px; }
+.src { font-family: var(--mono); font-size: 11.5px; color: var(--muted); letter-spacing: .02em; }
+a { color: var(--accent); }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+
+/* HERO */
+.top { display: flex; justify-content: space-between; align-items: center; padding-block: 22px; }
+.mark { display: flex; align-items: center; gap: 10px; font-family: var(--display); font-weight: 800; font-stretch: 125%; font-size: 20px; letter-spacing: .02em; }
+.mark svg { flex: none; }
+.tag { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+.hero { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, .9fr); gap: clamp(32px, 6vw, 72px); align-items: center; padding-block: clamp(32px, 6vw, 72px) clamp(56px, 8vw, 96px); }
+.hero h1 { font-size: clamp(40px, 7vw, 78px); line-height: .98; font-weight: 800; font-stretch: 125%; }
+.hero h1 em { font-style: normal; color: var(--accent); }
+.hero .lede { font-size: 19px; }
+.hero-stat { display: flex; align-items: baseline; gap: 14px; margin-top: 32px; padding-top: 22px; border-top: 1px solid var(--line); max-width: 520px; }
+.hero-stat b { font-family: var(--display); font-weight: 800; font-stretch: 125%; font-size: 44px; line-height: 1; color: var(--fg); white-space: nowrap; }
+.hero-stat span { color: var(--muted); font-size: 15px; line-height: 1.45; }
+
+/* Phone alert — the one bold piece */
+.phone {
+  background: var(--chat-bg); border: 1px solid var(--line); border-radius: 28px;
+  padding: 16px 14px 18px; max-width: 360px; width: 100%; justify-self: center;
+  box-shadow: 0 30px 60px -30px rgba(0,0,0,.6);
+}
+.phone-head { display: flex; align-items: center; gap: 10px; padding: 4px 6px 14px; border-bottom: 1px solid var(--line); margin-bottom: 14px; }
+.phone-head .av { width: 34px; height: 34px; border-radius: 50%; background: var(--accent); display: grid; place-items: center; flex: none; }
+.phone-head b { display: block; font-size: 14px; }
+.phone-head small { display: block; font-size: 11.5px; color: var(--ok); }
+.msgs { display: flex; flex-direction: column; gap: 8px; }
+.bubble { font-size: 13.5px; line-height: 1.45; padding: 9px 11px; border-radius: 12px; max-width: 88%; }
+.bubble.me { align-self: flex-end; background: var(--bubble-me); border-top-right-radius: 3px; overflow-wrap: anywhere; }
+.bubble.them { align-self: flex-start; background: var(--bubble-them); border-top-left-radius: 3px; border: 1px solid var(--line); }
+.score { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+.score b { font-family: var(--display); font-weight: 800; font-stretch: 125%; font-size: 30px; line-height: 1; color: var(--risk); }
+.pill { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; font-weight: 500; padding: 3px 8px; border-radius: 999px; background: var(--risk); color: #fff; }
+.bubble ul { margin: 6px 0 0; padding-left: 16px; }
+.bubble li { margin: 2px 0; }
+.bubble .meta { display: block; font-family: var(--mono); font-size: 10px; color: var(--muted); margin-bottom: 4px; letter-spacing: .06em; }
+
+/* PAIN */
+.pain-grid {
+  display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 1px;
+  background: var(--line); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; margin-top: 44px;
+}
+.stat { background: var(--surface); padding: 26px 24px 22px; display: flex; flex-direction: column; gap: 10px; grid-column: span 2; min-width: 0; }
+.stat.wide { grid-column: span 3; }
+.stat .n { font-family: var(--display); font-weight: 800; font-stretch: 112%; font-size: clamp(34px, 4.6vw, 52px); line-height: 1; font-variant-numeric: tabular-nums; }
+.stat.hot .n { color: var(--accent); }
+.stat .t { font-size: 15px; color: var(--fg); max-width: 34ch; }
+.stat .src { margin-top: auto; padding-top: 6px; }
+
+.channel { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; margin-top: 64px; align-items: start; }
+.bars { display: flex; flex-direction: column; gap: 18px; }
+.bar-row { display: grid; grid-template-columns: minmax(0, 1fr) 56px; gap: 6px 14px; align-items: center; }
+.bar-row .lbl { grid-column: 1 / -1; font-size: 14.5px; color: var(--fg); }
+.track { height: 12px; background: var(--surface-2); border-radius: 999px; overflow: hidden; }
+.fill { height: 100%; background: var(--accent); border-radius: 999px; }
+.fill.quiet { background: var(--muted); opacity: .55; }
+.bar-row .v { font-family: var(--mono); font-size: 14px; text-align: right; font-variant-numeric: tabular-nums; }
+.note { color: var(--muted); font-size: 15px; }
+.note strong { color: var(--fg); font-weight: 600; }
+
+/* JOURNEY */
+.journey { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; margin-top: 48px; counter-reset: step; }
+.phase { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 26px 24px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.phase .when { font-family: var(--mono); font-size: 12px; color: var(--muted); letter-spacing: .1em; text-transform: uppercase; }
+.phase .verb { font-family: var(--display); font-weight: 800; font-stretch: 125%; font-size: 28px; line-height: 1; color: var(--accent); }
+.phase p { color: var(--muted); font-size: 15px; }
+.phase .proof { margin-top: auto; padding-top: 14px; border-top: 1px dashed var(--line); font-size: 14px; color: var(--fg); }
+.phase .proof b { font-family: var(--mono); font-weight: 500; }
+
+/* LANDSCAPE */
+.table-wrap { overflow-x: auto; margin-top: 44px; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; min-width: 760px; font-size: 14.5px; }
+th, td { text-align: left; padding: 16px 18px; border-bottom: 1px solid var(--line); vertical-align: top; }
+thead th { font-family: var(--mono); font-weight: 500; font-size: 11.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); background: var(--surface-2); }
+tbody tr:last-child td { border-bottom: 0; }
+td.who { font-weight: 600; min-width: 200px; }
+td.who small { display: block; font-weight: 400; color: var(--muted); font-size: 13px; margin-top: 4px; }
+tr.us td { background: var(--accent-soft); }
+tr.us td.who { color: var(--accent); }
+.y, .x, .p { font-family: var(--mono); font-size: 13px; white-space: nowrap; }
+.y { color: var(--ok); }
+.x { color: var(--muted); }
+.p { color: var(--fg); }
+.gap-note { margin-top: 22px; color: var(--muted); max-width: 70ch; font-size: 15.5px; }
+.gap-note strong { color: var(--fg); }
+
+.bench { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; margin-top: 40px; }
+.bench div { border-left: 2px solid var(--line); padding: 2px 0 2px 18px; min-width: 0; }
+.bench b { display: block; font-family: var(--display); font-weight: 800; font-stretch: 112%; font-size: 30px; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.bench span { color: var(--muted); font-size: 14.5px; }
+
+/* MARKET */
+.market { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 48px; margin-top: 44px; align-items: center; }
+.rings { position: relative; aspect-ratio: 1; max-width: 420px; width: 100%; justify-self: center; }
+.ring { position: absolute; border-radius: 50%; display: flex; justify-content: center; text-align: center; border: 1px solid var(--line); }
+.ring.tam { inset: 0; background: var(--surface); padding-top: 7%; }
+.ring.sam { inset: 22% 11% 0 11%; background: var(--surface-2); padding-top: 9%; }
+.ring.som { inset: 62% 30% 4% 30%; background: var(--accent); color: var(--accent-ink); align-items: center; border: 0; }
+.ring div { display: flex; flex-direction: column; gap: 2px; }
+.ring b { font-family: var(--display); font-weight: 800; font-stretch: 112%; font-size: clamp(18px, 3vw, 26px); line-height: 1.1; }
+.ring small { font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .8; }
+.mkt-list { display: flex; flex-direction: column; gap: 22px; }
+.mkt-list > div { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 16px; }
+.mkt-list .k { font-family: var(--mono); font-size: 13px; color: var(--accent); padding-top: 3px; }
+.mkt-list p { color: var(--muted); font-size: 15px; }
+.mkt-list p strong { color: var(--fg); font-weight: 600; }
+
+/* MODEL */
+.model { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; margin-top: 44px; }
+.plan { border: 1px solid var(--line); border-radius: 16px; padding: 26px 24px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.plan.main { border-color: var(--accent); background: var(--accent-soft); }
+.plan .price { font-family: var(--display); font-weight: 800; font-stretch: 112%; font-size: 30px; line-height: 1; }
+.plan .price small { font-family: var(--body); font-weight: 400; font-size: 14px; color: var(--muted); }
+.plan p { color: var(--muted); font-size: 15px; }
+.plan .who { font-family: var(--mono); font-size: 11.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
+
+/* CLOSE */
+.close { text-align: left; }
+.close h2 { max-width: 18ch; font-size: clamp(32px, 5vw, 56px); }
+.close .lede { margin-top: 20px; }
+footer { padding-block: 40px 56px; border-top: 1px solid var(--line); }
+footer ol { margin: 14px 0 0; padding-left: 18px; columns: 2; column-gap: 40px; }
+footer li { font-size: 12.5px; color: var(--muted); margin-bottom: 6px; break-inside: avoid; }
+footer p { font-size: 12.5px; color: var(--muted); max-width: 80ch; }
+
+@media (max-width: 880px) {
+  .hero, .channel, .market { grid-template-columns: 1fr; }
+  .journey, .model, .bench { grid-template-columns: 1fr; }
+  .pain-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .stat, .stat.wide { grid-column: span 1; }
+  footer ol { columns: 1; }
+}
+@media (max-width: 520px) {
+  .pain-grid { grid-template-columns: 1fr; }
+  .hero-stat { flex-direction: column; gap: 8px; }
+  .tag { display: none; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .fill { animation: grow .9s cubic-bezier(.2,.7,.2,1) both; transform-origin: left; }
+  @keyframes grow { from { transform: scaleX(.15); } to { transform: scaleX(1); } }
+}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="mark" aria-label="Fraus">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 9 8 11 4.6-2 8-6 8-11V5l-8-3Z" fill="var(--accent)"/><path d="m8.5 12 2.4 2.4 4.6-4.8" stroke="var(--accent-ink)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      FRAUS
+    </div>
+    <span class="tag">Startup One FIAP · Girafas</span>
+  </header>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div>
+      <span class="eyebrow">Antifraude dentro do WhatsApp</span>
+      <h1>O golpe chega pelo WhatsApp. <em>A defesa também.</em></h1>
+      <p class="lede">O Fraus analisa o que chega até você, vigia o que fazem com o seu CPF e conduz a resposta quando algo dá errado. Tudo numa conversa, sem baixar app.</p>
+      <div class="hero-stat">
+        <b>1 em 3</b>
+        <span>brasileiros perdeu dinheiro com golpe digital nos últimos 12 meses. São 56 milhões de pessoas.</span>
+      </div>
+    </div>
+
+    <div class="phone" role="img" aria-label="Exemplo de conversa: o usuário envia um link suspeito e o Fraus responde com risco 82, alto">
+      <div class="phone-head">
+        <div class="av"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 9 8 11 4.6-2 8-6 8-11V5l-8-3Z" fill="var(--accent-ink)"/></svg></div>
+        <div><b>Fraus</b><small>monitorando seu CPF</small></div>
+      </div>
+      <div class="msgs">
+        <div class="bubble me">recebi isso no grupo da família, é golpe? banc0-premios.com/resgate</div>
+        <div class="bubble them">
+          <div class="score"><b>82</b><span class="pill">RISCO ALTO</span></div>
+          Provavelmente é golpe.
+          <ul>
+            <li>Domínio criado há 4 dias</li>
+            <li>"banc0" com zero no lugar do "o"</li>
+            <li>A página pede CPF e senha</li>
+          </ul>
+        </div>
+        <div class="bubble them">
+          <span class="meta">ALERTA · SEU CPF</span>
+          Uma financeira consultou seu CPF hoje às 14:02. Foi você?
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAIN -->
+  <section aria-labelledby="dor">
+    <span class="eyebrow">A dor em números</span>
+    <h2 id="dor">Golpe virou o crime patrimonial mais comum do Brasil</h2>
+    <p class="lede">Os boletins de ocorrência contam 2,26 milhões de estelionatos em 2025. As pesquisas com a população mostram um problema cerca de 25 vezes maior, porque a maioria das vítimas nunca registra.</p>
+
+    <div class="pain-grid">
+      <div class="stat wide hot">
+        <span class="n">56 mi</span>
+        <span class="t">de brasileiros sofreram golpe digital com prejuízo financeiro em 12 meses</span>
+        <span class="src">Datafolha / FBSP, jul/24–jun/25</span>
+      </div>
+      <div class="stat wide">
+        <span class="n">R$ 29 bi</span>
+        <span class="t">perdidos só com golpes de Pix e boleto falso, média de R$ 1.198 por vítima</span>
+        <span class="src">Datafolha / FBSP, jul/24–jun/25</span>
+      </div>
+      <div class="stat">
+        <span class="n">46,4 mi</span>
+        <span class="t">receberam contato de falsa central de segurança</span>
+        <span class="src">Datafolha / FBSP</span>
+      </div>
+      <div class="stat">
+        <span class="n">2,8 mi</span>
+        <span class="t">tentativas de fraude de identidade no 1º semestre de 2026, alta de 32,9%</span>
+        <span class="src">Mapa da Fraude, 1º sem. 2026</span>
+      </div>
+      <div class="stat">
+        <span class="n">83%</span>
+        <span class="t">dos brasileiros têm medo de ser vítima de fraude pela internet ou celular</span>
+        <span class="src">Anuário Bras. de Segurança Pública 2026</span>
+      </div>
+    </div>
+
+    <div class="channel">
+      <div>
+        <h3>Onde o golpe começa e o que ele deixa para trás</h3>
+        <p class="note" style="margin-top:12px">Entre quem recebeu tentativa de golpe com dados pessoais, <strong>84% foi abordado por aplicativo de mensagem</strong>. E as consequências vão além do dinheiro: quase metade das vítimas fica com dívidas ou contas que não são suas.</p>
+        <p class="src" style="margin-top:14px">Cetic.br, Pesquisa Privacidade e Proteção de Dados, dez/2025</p>
+      </div>
+      <div class="bars" aria-label="Consequências e canal dos golpes">
+        <div class="bar-row"><span class="lbl">Abordados por app de mensagem</span><div class="track"><div class="fill" style="width:84%"></div></div><span class="v">84%</span></div>
+        <div class="bar-row"><span class="lbl">Tiveram dinheiro roubado</span><div class="track"><div class="fill quiet" style="width:48%"></div></div><span class="v">48%</span></div>
+        <div class="bar-row"><span class="lbl">Perderam acesso a e-mail ou redes</span><div class="track"><div class="fill quiet" style="width:43%"></div></div><span class="v">43%</span></div>
+        <div class="bar-row"><span class="lbl">Ficaram com dívidas feitas em seu nome</span><div class="track"><div class="fill" style="width:42%"></div></div><span class="v">42%</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- JOURNEY -->
+  <section aria-labelledby="jornada">
+    <span class="eyebrow">A solução</span>
+    <h2 id="jornada">Uma conversa que cobre o antes, o durante e o depois</h2>
+    <p class="lede">Hoje cada parte da jornada da vítima tem uma ferramenta diferente, em um lugar diferente. O Fraus junta as três no canal onde o golpe já acontece.</p>
+
+    <div class="journey">
+      <article class="phase">
+        <span class="when">Antes do golpe</span>
+        <span class="verb">Analisar</span>
+        <p>A pessoa encaminha o link, print ou mensagem suspeita. Recebe em segundos um score de risco de 0 a 100, com o motivo explicado em linguagem simples.</p>
+        <p class="proof"><b>46,4 mi</b> receberam contato de falsa central em um ano</p>
+      </article>
+      <article class="phase">
+        <span class="when">Durante</span>
+        <span class="verb">Vigiar</span>
+        <p>O Fraus acompanha o CPF e avisa sozinho quando aparece conta nova, consulta de crédito ou empresa aberta no seu nome. A pessoa responde "fui eu" ou "não reconheço".</p>
+        <p class="proof"><b>42%</b> das vítimas ficam com dívidas feitas em seu nome</p>
+      </article>
+      <article class="phase">
+        <span class="when">Depois</span>
+        <span class="verb">Responder</span>
+        <p>Se virou incidente, abre um caso com o passo a passo na ordem certa: banco, bloqueio do CPF, boletim de ocorrência. E gera o resumo pronto para anexar.</p>
+        <p class="proof"><b>R$ 1.198</b> de prejuízo médio por vítima de golpe do Pix</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- LANDSCAPE -->
+  <section aria-labelledby="mercado-hoje">
+    <span class="eyebrow">O que existe hoje</span>
+    <h2 id="mercado-hoje">Cada solução cobre um pedaço. Nenhuma cobre a jornada.</h2>
+    <p class="lede">Analisamos as alternativas que o brasileiro tem hoje para se proteger. Elas se agrupam em quatro tipos.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Tipo de solução</th>
+            <th scope="col">Analisa mensagem</th>
+            <th scope="col">Vigia o CPF</th>
+            <th scope="col">Guia a resposta</th>
+            <th scope="col">No WhatsApp</th>
+            <th scope="col">Preço</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="who">Monitoramento de crédito<small>O líder do setor tem cerca de 400 mil assinantes e avisa por app, e-mail e SMS</small></td>
+            <td class="x">Não</td><td class="y">Sim</td><td class="x">Não</td><td class="x">Não</td><td class="p">R$ 23,90/mês</td>
+          </tr>
+          <tr>
+            <td class="who">Ferramentas públicas de bloqueio<small>Bloqueiam abertura de contas e empresas no CPF. Exigem conta gov.br prata ou ouro</small></td>
+            <td class="x">Não</td><td class="y">Bloqueia</td><td class="x">Não</td><td class="x">Não</td><td class="p">Grátis</td>
+          </tr>
+          <tr>
+            <td class="who">Apoio a vítimas<small>Startups que orientam quem já caiu no golpe, com foco em recuperar o dinheiro</small></td>
+            <td class="x">Não</td><td class="x">Não</td><td class="y">Sim</td><td class="y">Sim</td><td class="p">Grátis</td>
+          </tr>
+          <tr>
+            <td class="who">Alertas do próprio banco<small>Avisam transações suspeitas, só para quem é cliente daquela instituição</small></td>
+            <td class="x">Não</td><td class="x">Não</td><td class="x">Parcial</td><td class="y">Sim</td><td class="p">Grátis</td>
+          </tr>
+          <tr class="us">
+            <td class="who">Fraus</td>
+            <td class="y">Sim</td><td class="y">Sim</td><td class="y">Sim</td><td class="y">Sim</td><td class="p">Freemium</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="gap-note">As ferramentas públicas são aliadas, não concorrentes. <strong>O Fraus guia o usuário a ativá-las</strong>, interpreta o que elas mostram e conduz o que fazer a seguir. A ferramenta pública de bloqueio de contas chegou a 1 milhão de ativações em três meses, o que mostra demanda, mas também que a maioria ainda não sabe que ela existe.</p>
+
+    <div class="bench">
+      <div><b>US$ 5 bi</b><span>de receita anual do maior grupo global de proteção digital ao consumidor, com 79 milhões de clientes pagantes</span></div>
+      <div><b>~90%</b><span>de retenção na linha de proteção de identidade desse grupo. Quem assina, fica</span></div>
+      <div><b>R$ 2,1 bi</b><span>pagos pelo maior birô de crédito do país por uma empresa brasileira de antifraude em 2024</span></div>
+    </div>
+  </section>
+
+  <!-- MARKET -->
+  <section aria-labelledby="tamanho">
+    <span class="eyebrow">Tamanho de mercado</span>
+    <h2 id="tamanho">R$ 11 bilhões por ano em quem já foi alvo</h2>
+    <p class="lede">Cálculo com um preço hipotético de R$ 14,90 por mês, abaixo do que o consumidor já paga hoje por monitoramento de CPF.</p>
+
+    <div class="market">
+      <div class="rings" role="img" aria-label="TAM de 26,5 bilhões de reais, SAM de 11 bilhões, SOM de 11 milhões por ano">
+        <div class="ring tam"><div><small>TAM</small><b>R$ 26,5 bi</b></div></div>
+        <div class="ring sam"><div><small>SAM</small><b>R$ 11 bi</b></div></div>
+        <div class="ring som"><div><small>SOM · ano 3</small><b>R$ 11 mi</b></div></div>
+      </div>
+      <div class="mkt-list">
+        <div><span class="k">TAM</span><p><strong>148 milhões</strong> de usuários de WhatsApp no Brasil, o 2º maior mercado do mundo.</p></div>
+        <div><span class="k">SAM</span><p><strong>61,3 milhões</strong> sofreram tentativa de golpe virtual nos últimos 12 meses.</p></div>
+        <div><span class="k">SOM</span><p><strong>~61 mil assinantes</strong> no ano 3, 0,1% do SAM. Equivale a 15% da base do líder atual de monitoramento de CPF.</p></div>
+        <div><span class="k">B2B2C</span><p>Alternativa: <strong>um único contrato</strong> com uma instituição de 1 milhão de clientes, a R$ 1 por cliente por mês, gera ~R$ 12 milhões por ano.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODEL -->
+  <section aria-labelledby="modelo">
+    <span class="eyebrow">Modelo de negócio</span>
+    <h2 id="modelo">Grátis para entrar, pago para ficar protegido</h2>
+
+    <div class="model">
+      <div class="plan">
+        <span class="who">Gratuito</span>
+        <span class="price">R$ 0</span>
+        <p>Algumas checagens de links e mensagens por mês. É a porta de entrada e se espalha sozinho no grupo da família.</p>
+      </div>
+      <div class="plan main">
+        <span class="who">Proteção · Família</span>
+        <span class="price">R$ 14,90<small> /mês</small></span>
+        <p>Monitoramento contínuo do CPF, checagens ilimitadas e resposta guiada. No plano família, o filho protege os pais: WhatsApp é o canal de 69% dos golpes contra pessoas com mais de 60 anos.</p>
+      </div>
+      <div class="plan">
+        <span class="who">White-label B2B2C</span>
+        <span class="price">Por cliente</span>
+        <p>Bancos médios, cooperativas de crédito e seguradoras oferecem o Fraus com a própria marca e pagam por cliente protegido.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CLOSE -->
+  <section class="close">
+    <span class="eyebrow">Hipótese central</span>
+    <h2>Diminuir a distância entre "chegou algo suspeito" e "eu sei o que fazer".</h2>
+    <p class="lede">Próximos passos: 7 entrevistas com potenciais usuários, piloto do bot com 20 a 30 pessoas por duas semanas e conversa com cooperativas de crédito sobre white-label.</p>
+  </section>
+
+  <footer>
+    <span class="eyebrow">Fontes</span>
+    <ol>
+      <li>Datafolha / Fórum Brasileiro de Segurança Pública, Pesquisa de Vitimização, jun/2025</li>
+      <li>Anuário Brasileiro de Segurança Pública, 20ª edição, 2026</li>
+      <li>Cetic.br / NIC.br, Privacidade e Proteção de Dados Pessoais, dez/2025</li>
+      <li>Mapa da Fraude, 1º semestre de 2026 (birô de crédito)</li>
+      <li>Estudo Golpes com Pix 2025 (startup de apoio a vítimas)</li>
+      <li>Banco Central, ativações da ferramenta de bloqueio de contas, fev/2026</li>
+      <li>Resultados do ano fiscal 2026 do maior grupo global de proteção digital ao consumidor</li>
+      <li>Comunicados de aquisição no setor antifraude, 2024–2026</li>
+    </ol>
+    <p style="margin-top:18px">TAM, SAM, SOM e preço são hipóteses de cálculo, ainda sem validação com clientes. O número de usuários de WhatsApp no Brasil é estimativa de mercado, não dado oficial da Meta.</p>
+  </footer>
+</div>
+
+</body></html>

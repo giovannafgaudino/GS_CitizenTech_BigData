@@ -1,0 +1,8 @@
+data/bronze/
+data/silver/
+data/raw/*.csv
+data/gold/
+data/*.sqlite
+__pycache__/
+.env
+logs/

@@ -1,0 +1,29 @@
+digraph G {
+  rankdir=TB; fontname="Helvetica"; nodesep=0.3; ranksep=0.45; compound=true;
+  node [fontname="Helvetica", fontsize=11, shape=box, style="rounded,filled", color="#475569", fillcolor="#FFFFFF"];
+  edge [color="#475569", fontname="Helvetica", fontsize=9];
+
+  subgraph cluster_src { label="Fontes"; style="rounded"; color="#94A3B8"; fontsize=12;
+    sp156 [label="SP156\nPortal de Dados Abertos PMSP\n(CSV trimestral, CC0)", fillcolor="#DBEAFE"];
+    app   [label="App CidadeViva\nAPI de exportação / simulador\n(JSON de reportes)", fillcolor="#DBEAFE"];
+    seeds [label="Referências (seeds)\nsubprefeituras · categorias\nregras de classificação", fillcolor="#DBEAFE"];
+  }
+  subgraph cluster_af { label="Apache Airflow — DAG cidadeviva_pipeline (@daily)"; style="rounded,dashed"; color="#7C3AED"; fontsize=12;
+    subgraph cluster_b { label="BRONZE\nbruto + manifest/hash"; style="filled"; fillcolor="#FEF3C7"; color="#D97706";
+      b1 [label="ingerir_sp156"]; b2 [label="ingerir_cidadeviva"]; b3 [label="ingerir_referencias"]; }
+    subgraph cluster_s { label="SILVER\nlimpo, tipado, sem PII"; style="filled"; fillcolor="#E2E8F0"; color="#64748B";
+      s1 [label="silver_sp156\nfiltra zeladoria · classifica\nvalida coordenadas"]; s2 [label="silver_cidadeviva\ndedup · hash do usuário\nmascara PII · flag revisão"]; }
+    subgraph cluster_g { label="GOLD\nmodelo dimensional"; style="filled"; fillcolor="#FEF9C3"; color="#CA8A04";
+      g1 [label="construir_gold\n3 dimensões · 2 fatos · 2 marts"]; }
+    q1 [label="validar_qualidade\n19 checks (gate)", fillcolor="#FEE2E2", color="#DC2626"];
+    l1 [label="carregar_dw\nidempotente por dt_ingestao", fillcolor="#DCFCE7", color="#16A34A"];
+  }
+  dw [label="Data Warehouse\nPostgreSQL (cidadeviva_dw)", shape=cylinder, fillcolor="#DCFCE7", color="#16A34A"];
+  mvp [label="MVP CidadeViva\nmapa de calor · fila de revisão\nprioridade p/ RPA", fillcolor="#FCE7F3", color="#DB2777"];
+  ia  [label="Assistente de IA\n(GenAI) — triagem", fillcolor="#FCE7F3", color="#DB2777"];
+
+  sp156 -> b1; app -> b2; seeds -> b3;
+  b1 -> s1; b2 -> s2; b3 -> s1 [style=dashed]; b3 -> s2 [style=dashed];
+  s1 -> g1; s2 -> g1; g1 -> q1 -> l1 -> dw;
+  dw -> mvp; dw -> ia [label="categorias, histórico"];
+}

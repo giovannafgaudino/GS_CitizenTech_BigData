@@ -1,0 +1,223 @@
+{
+ "linhas_lidas": 1525907,
+ "nao_zeladoria_descartadas": 1053383,
+ "sem_data_valida": 0,
+ "coordenadas_invalidas_anuladas": 124,
+ "linhas_silver": 472524,
+ "sem_subprefeitura": 2380,
+ "arquivos": {
+  "sp156_raw_1.csv": {
+   "origem": "arquivo-final-1-trim-26",
+   "encoding": "cp1252",
+   "separador": ";",
+   "formato_data": "%d/%m/%Y"
+  },
+  "sp156_raw_2.csv": {
+   "origem": "arquivo-final-2-trim-26",
+   "encoding": "cp1252",
+   "separador": ";",
+   "formato_data": "%d/%m/%Y"
+  },
+  "sp156_raw_3.csv": {
+   "origem": "arquivo-final-3-trim-26",
+   "encoding": "utf-8-sig",
+   "separador": ",",
+   "formato_data": "%m/%d/%Y"
+  }
+ },
+ "por_categoria": {
+  "limpeza_urbana": 191770,
+  "arvores_areas_verdes": 108549,
+  "pavimento": 84540,
+  "drenagem": 34997,
+  "calcadas_acessibilidade": 41336,
+  "sinalizacao_semaforo": 9690,
+  "iluminacao": 1642
+ },
+ "status_origem": {
+  "FINALIZADA": 389241,
+  "ABERTO": 81020,
+  "CANCELADA": 2090,
+  "EM ANDAMENTO": 173
+ },
+ "top_nao_classificados": [
+  [
+   "Cultura, esporte e lazer | Centros esportivos | Centros Esportivos - Solicitar Carteirinha",
+   79232
+  ],
+  [
+   "Cidadania e assistência social | População ou pessoa em situação de rua | Baixas Temperaturas - Solicitar abordagem social para pessoas em situação de rua",
+   72138
+  ],
+  [
+   "Cidadania e assistência social | População ou pessoa em situação de rua | Solicitar abordagem social a pessoa em situação de rua (SEAS)",
+   63292
+  ],
+  [
+   "Trânsito e Transporte | Sinalização e Circulação de Veículos e Pedestres | Rodízio de veículos - Isenção para pessoa com deficiência (PCD)",
+   45743
+  ],
+  [
+   "Animais | Castração | Castrar Cães e Gatos Gratuitamente",
+   45046
+  ],
+  [
+   "Rua e bairro | Poluição Sonora - PSIU | Reclamação de poluição sonora - PSIU",
+   43166
+  ],
+  [
+   "Trânsito e Transporte | Veículos abandonados | Solicitar remoção de veículo/carcaça abandonado na via pública",
+   34971
+  ],
+  [
+   "Ouvidoria Geral do Município | Ouvidoria Geral do Município | Reclamação",
+   33100
+  ],
+  [
+   "Ouvidoria SUS | Ouvidoria SUS | Ouvidoria SUS da cidade de São Paulo - Manifestar-se sobre Problemas com sua solicitação no SUS",
+   29519
+  ],
+  [
+   "Cidadania e assistência social | População ou pessoa em situação de rua | Altas Temperaturas - Solicitar abordagem social a pessoa em situação de rua",
+   26520
+  ],
+  [
+   "Trânsito e Transporte | Estacionamento | Cartão de estacionamento idoso.",
+   24952
+  ],
+  [
+   "Saúde | Medicamento de controle especial | Farmácias de manipulação e drogarias - Entregar Balanços e Relações Mensais de Notificação de Receitas da Portaria 344/98",
+   24707
+  ],
+  [
+   "Ouvidoria SUS | Ouvidoria SUS | Ouvidoria SUS da Cidade de São Paulo – Fazer Reclamação sobre serviços prestados",
+   21078
+  ],
+  [
+   "Trânsito e Transporte | Estacionamento | Cartão de estacionamento DeFis (pessoa com deficiência)",
+   19518
+  ],
+  [
+   "Trânsito e Transporte | Ônibus - Linhas e itinerários | Ônibus - Reclamar de intervalo excessivo da linha",
+   14940
+  ],
+  [
+   "Trânsito e Transporte | Fretamento | Fretamento - Cadastrar ou renovar Certificado de Vínculo ao Serviço (CVS)",
+   13186
+  ],
+  [
+   "Ouvidoria Geral do Município | Ouvidoria Geral do Município | Reclamação Anônima (Uso exclusivo da Ouvidoria)",
+   12051
+  ],
+  [
+   "Finanças | IPTU - Imposto Predial e Territorial Urbano | IPTU - Fale com a Fazenda",
+   11465
+  ],
+  [
+   "Finanças | Cadastro de Contribuintes Mobiliários (CCM) | CCM - Inscrever pessoa física ou jurídica (casos que não estão no VRE)",
+   11410
+  ],
+  [
+   "Urgência | Guarda Civil Metropolitana | Apoio a agente público",
+   10950
+  ],
+  [
+   "Finanças | Nota do Milhão | Nota do Milhão - Fale com a Fazenda",
+   9865
+  ],
+  [
+   "Trânsito e Transporte | Ônibus - Conduta de Trabalho do Motorista, Cobrador e Fiscal | Ônibus - Denunciar motorista por não atender ao sinal de embarque e desembarque",
+   9786
+  ],
+  [
+   "Obras e imóveis | Fiscalização de obras | Solicitar fiscalização de obra e reforma em imóvel particular",
+   9750
+  ],
+  [
+   "Finanças | Cadastro de Contribuintes Mobiliários (CCM) | CCM – Fale com a Fazenda",
+   8470
+  ],
+  [
+   "Trânsito e Transporte | Ônibus - Conduta de Trabalho do Motorista, Cobrador e Fiscal | Ônibus – Denunciar motorista, cobrador ou fiscal por atitude inadequada",
+   8380
+  ],
+  [
+   "Trânsito e Transporte | Táxi | Táxi - Solicitar certidão para isenção de Imposto sobre Circulação de Mercadorias e Prestação de Serviços (ICMS)",
+   7828
+  ],
+  [
+   "Trânsito e Transporte | Táxi | Táxi - Solicitar renovação do Condutax",
+   7341
+  ],
+  [
+   "Saúde | Medicamento de controle especial | Notificação de receita de controle especial - Solicitar retirada de talonário ou de numeração",
+   6981
+  ],
+  [
+   "Animais | Animais que transmitem doenças ou risco à saúde | Ratos - Solicitar vistoria em local infestado",
+   6967
+  ],
+  [
+   "Urgência | Guarda Civil Metropolitana | Ocorrências com animais silvestres",
+   6683
+  ],
+  [
+   "Animais | Animais que transmitem doenças ou risco à saúde | Abelhas e Vespas - Solicitar vistoria em ninhos",
+   6505
+  ],
+  [
+   "Educação | Leve Leite | Leve Leite - Reclamação de não entrega do leite",
+   6460
+  ],
+  [
+   "Trânsito e Transporte | Estacionamento | Cartão de estacionamento idoso",
+   6413
+  ],
+  [
+   "Finanças | Cadastro de Contribuintes Mobiliários (CCM) | CCM - Alterar cadastro de pessoa física ou jurídica (casos que não estão no VRE)",
+   6367
+  ],
+  [
+   "Trânsito e Transporte | Estacionamento | Intensificar fiscalização de veículos estacionados/parados irregularmente",
+   5829
+  ],
+  [
+   "Animais | Criação inadequada de animais | Denunciar condições inadequadas de criação de animais domésticos",
+   5577
+  ],
+  [
+   "Finanças | ISS - Imposto Sobre Serviços | ISS - Fale com a Fazenda",
+   5431
+  ],
+  [
+   "Trânsito e Transporte | Ônibus - Linhas e itinerários | Ônibus - Reclamar de descumprimento de partida no ponto inicial/final",
+   5384
+  ],
+  [
+   "Animais | Animal em via pública | Solicitar remoção de animal morto em via pública",
+   5330
+  ],
+  [
+   "Trânsito e Transporte | Táxi | Táxi - Fazer cadastro de Condutax",
+   5327
+  ]
+ ],
+ "subprefeituras_nao_resolvidas": [
+  [
+   "Superintendencia das Usinas de Asfalto",
+   1373
+  ],
+  [
+   "Prefeitura Regional nao encontrada",
+   278
+  ],
+  [
+   "Secretaria Municipal do Verde e do Meio Ambiente",
+   9
+  ],
+  [
+   "Departamento de Estradas de Rodagem",
+   5
+  ]
+ ]
+}

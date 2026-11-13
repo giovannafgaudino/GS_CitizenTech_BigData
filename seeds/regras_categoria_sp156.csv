@@ -1,0 +1,8 @@
+ordem,padrao_regex,categoria_codigo,servico_sp156_destino
+1,arvore.*poda ou remocao|queda de arvore|queda de galho|risco iminente de queda|capinacao|rocada|plantio de arvores,arvores_areas_verdes,Árvore - solicitar avaliação para poda ou remoção
+2,semaforo|placa de transito|placas de transito|placa com nome de rua|sinalizacao horizontal|travessia de pedestres solicitar avaliacao|botoeira|faixa de pedestre,sinalizacao_semaforo,Semáforo / sinalização - solicitar manutenção
+3,bueiro|boca de lobo|bocas de lobo|galerias de aguas|microdrenagem|drenagem|corrego solicitar limpeza|valas valetas|alagamento|inundacao|rompimento de galeria,drenagem,Bueiro / boca de lobo - solicitar limpeza
+4,tapa buraco|pontes viadutos|paralelepipedo|nivelamento de vias,pavimento,Tapa-buraco - solicitar reparo
+5,calcada publica|calcada particular|obstaculo na calcada|guias sarjetas|guia rebaixada|guias rebaixadas|rebaixamento|construcao de calcadas|vielas e escadarias|calcada solicitar|calcada reparo,calcadas_acessibilidade,Calçada - solicitar manutenção
+6,iluminacao publica|lampada|luminaria|poste em mau estado|fiacao solta,iluminacao,Poste / iluminação - solicitar reparo
+7,entulho|varricao|lavagem de calcadoes|coleta de lixo|lixo domiciliar|cata bagulho|lixeira|limpeza da via publica|limpeza de terrenos|descarte irregular|ecoponto|conteiner para coleta|conteiner de coleta|coleta seletiva|falta de limpeza da rua,limpeza_urbana,Entulho / limpeza - solicitar remoção

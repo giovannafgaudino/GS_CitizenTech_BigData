@@ -1,0 +1,54 @@
+2026-11-12 21:11:36,354 INFO [cidadeviva] === ingerir_sp156 (ds=2026-11-12) ===
+2026-11-12 21:11:36,501 INFO [cidadeviva] SP156 bronze: sp156_raw_1.csv <- arquivo-final-1-trim-26.csv (124.5 MB)
+2026-11-12 21:11:36,623 INFO [cidadeviva] SP156 bronze: sp156_raw_2.csv <- arquivo-final-2-trim-26.csv (101.0 MB)
+2026-11-12 21:11:36,757 INFO [cidadeviva] SP156 bronze: sp156_raw_3.csv <- arquivo-final-3-trim-26.csv (105.6 MB)
+2026-11-12 21:11:36,757 INFO [cidadeviva] === ingerir_cidadeviva (ds=2026-11-12) ===
+2026-11-12 21:11:36,869 INFO [cidadeviva] CidadeViva bronze: 408 reportes -> /home/claude/cidadeviva-data-pipeline/data/bronze/cidadeviva/dt=2026-11-12/reportes.json
+2026-11-12 21:11:36,870 INFO [cidadeviva] === ingerir_referencias (ds=2026-11-12) ===
+2026-11-12 21:11:36,870 INFO [cidadeviva] referências bronze: ['aliases_subprefeitura.csv', 'categorias.csv', 'regras_categoria_sp156.csv', 'subprefeituras.csv']
+2026-11-12 21:11:36,870 INFO [cidadeviva] === silver_sp156 (ds=2026-11-12) ===
+2026-11-12 21:11:36,875 INFO [cidadeviva] SP156: sp156_raw_1.csv -> encoding=cp1252 separador=';'
+2026-11-12 21:11:38,103 INFO [cidadeviva] SP156: sp156_raw_1.csv -> formato de data %d/%m/%Y
+2026-11-12 21:11:46,531 INFO [cidadeviva] SP156: sp156_raw_2.csv -> encoding=cp1252 separador=';'
+2026-11-12 21:11:47,855 INFO [cidadeviva] SP156: sp156_raw_2.csv -> formato de data %d/%m/%Y
+2026-11-12 21:11:54,667 INFO [cidadeviva] SP156: sp156_raw_3.csv -> encoding=utf-8-sig separador=','
+2026-11-12 21:11:55,842 INFO [cidadeviva] SP156: sp156_raw_3.csv -> formato de data %m/%d/%Y
+2026-11-12 21:12:10,741 INFO [cidadeviva] gravado /home/claude/cidadeviva-data-pipeline/data/silver/sp156/dt=2026-11-12/solicitacoes.csv.gz (472524 linhas)
+2026-11-12 21:12:10,743 INFO [cidadeviva] SP156 silver: {'linhas_lidas': 1525907, 'nao_zeladoria_descartadas': 1053383, 'sem_data_valida': 0, 'coordenadas_invalidas_anuladas': 124, 'linhas_silver': 472524, 'sem_subprefeitura': 2380}
+2026-11-12 21:12:10,743 INFO [cidadeviva] SP156 por categoria: {'limpeza_urbana': 191770, 'arvores_areas_verdes': 108549, 'pavimento': 84540, 'drenagem': 34997, 'calcadas_acessibilidade': 41336, 'sinalizacao_semaforo': 9690, 'iluminacao': 1642}
+2026-11-12 21:12:10,743 WARNING [cidadeviva] SP156: subprefeituras não reconhecidas (adicione em seeds/aliases_subprefeitura.csv): [('Superintendencia das Usinas de Asfalto', 1373), ('Prefeitura Regional nao encontrada', 278), ('Secretaria Municipal do Verde e do Meio Ambiente', 9), ('Departamento de Estradas de Rodagem', 5)]
+2026-11-12 21:12:10,874 INFO [cidadeviva] === silver_cidadeviva (ds=2026-11-12) ===
+2026-11-12 21:12:10,904 INFO [cidadeviva] gravado /home/claude/cidadeviva-data-pipeline/data/silver/cidadeviva/dt=2026-11-12/reportes.csv.gz (400 linhas)
+2026-11-12 21:12:10,904 INFO [cidadeviva] CidadeViva silver: {'linhas_lidas': 408, 'duplicadas_removidas': 8, 'latlon_invertidos_corrigidos': 8, 'coordenadas_ausentes_ou_invalidas': 0, 'revisao_humana': 168, 'linhas_silver': 400}
+2026-11-12 21:12:10,905 INFO [cidadeviva] === construir_gold (ds=2026-11-12) ===
+2026-11-12 21:12:15,870 INFO [cidadeviva] gravado /home/claude/cidadeviva-data-pipeline/data/gold/dt=2026-11-12/dim_data.csv.gz (316 linhas)
+2026-11-12 21:12:15,871 INFO [cidadeviva] gravado /home/claude/cidadeviva-data-pipeline/data/gold/dt=2026-11-12/dim_subprefeitura.csv.gz (32 linhas)
+2026-11-12 21:12:15,872 INFO [cidadeviva] gravado /home/claude/cidadeviva-data-pipeline/data/gold/dt=2026-11-12/dim_categoria.csv.gz (7 linhas)
+2026-11-12 21:12:21,020 INFO [cidadeviva] gravado /home/claude/cidadeviva-data-pipeline/data/gold/dt=2026-11-12/fato_solicitacao_sp156.csv.gz (472524 linhas)
+2026-11-12 21:12:21,030 INFO [cidadeviva] gravado /home/claude/cidadeviva-data-pipeline/data/gold/dt=2026-11-12/fato_reporte.csv.gz (400 linhas)
+2026-11-12 21:12:21,044 INFO [cidadeviva] gravado /home/claude/cidadeviva-data-pipeline/data/gold/dt=2026-11-12/mart_demanda_subprefeitura_mes.csv.gz (1885 linhas)
+2026-11-12 21:12:21,046 INFO [cidadeviva] gravado /home/claude/cidadeviva-data-pipeline/data/gold/dt=2026-11-12/mart_triagem_ia.csv.gz (7 linhas)
+2026-11-12 21:12:21,046 INFO [cidadeviva] gold: {'dim_data': 316, 'dim_subprefeitura': 32, 'dim_categoria': 7, 'fato_solicitacao_sp156': 472524, 'fato_reporte': 400, 'mart_demanda_subprefeitura_mes': 1885, 'mart_triagem_ia': 7}
+2026-11-12 21:12:21,101 INFO [cidadeviva] === validar_qualidade (ds=2026-11-12) ===
+2026-11-12 21:12:22,352 INFO [cidadeviva] DQ fato_solicitacao_sp156 não vazia                 OK 472524 linhas
+2026-11-12 21:12:22,352 INFO [cidadeviva] DQ fato_reporte não vazia                           OK 400 linhas
+2026-11-12 21:12:22,432 INFO [cidadeviva] DQ PK única em fato_solicitacao_sp156               OK 
+2026-11-12 21:12:22,433 INFO [cidadeviva] DQ PK única em fato_reporte                         OK 
+2026-11-12 21:12:22,433 INFO [cidadeviva] DQ PK única em dim_subprefeitura                    OK 
+2026-11-12 21:12:22,433 INFO [cidadeviva] DQ PK única em dim_data                             OK 
+2026-11-12 21:12:22,439 INFO [cidadeviva] DQ FK subprefeitura válida (sp156)                  OK 
+2026-11-12 21:12:22,442 INFO [cidadeviva] DQ FK categoria válida (sp156)                      OK 
+2026-11-12 21:12:22,445 INFO [cidadeviva] DQ FK data válida (sp156)                           OK 
+2026-11-12 21:12:22,445 INFO [cidadeviva] DQ FK subprefeitura válida (reporte)                OK 
+2026-11-12 21:12:22,445 INFO [cidadeviva] DQ FK categoria válida (reporte)                    OK 
+2026-11-12 21:12:22,445 INFO [cidadeviva] DQ FK data válida (reporte)                         OK 
+2026-11-12 21:12:22,446 INFO [cidadeviva] DQ ≥ 80% das solicitações SP156 com subprefeitura   OK 99.5%
+2026-11-12 21:12:22,447 INFO [cidadeviva] DQ campos obrigatórios do reporte sem nulos         OK 
+2026-11-12 21:12:22,448 INFO [cidadeviva] DQ confiança da IA entre 0 e 1                      OK 
+2026-11-12 21:12:22,451 INFO [cidadeviva] DQ tempo de resposta SP156 ≥ 0                      OK 
+2026-11-12 21:12:22,451 INFO [cidadeviva] DQ coordenadas dos reportes dentro de SP            OK 
+2026-11-12 21:12:22,453 INFO [cidadeviva] DQ sem PII (e-mail/telefone) em fato_reporte.descricao OK 
+2026-11-12 21:12:22,453 INFO [cidadeviva] DQ sem colunas de nome/e-mail em fato_reporte       OK 
+2026-11-12 21:12:22,476 INFO [cidadeviva] === carregar_dw (ds=2026-11-12) ===
+2026-11-12 21:12:25,227 INFO [cidadeviva] warehouse (sqlite:////home/claude/cidadeviva-data-pipeline/data/cidadeviva_dw.sqlite) carregado: {'dim_data': 316, 'dim_subprefeitura': 32, 'dim_categoria': 7, 'fato_solicitacao_sp156': 472524, 'fato_reporte': 400, 'mart_demanda_subprefeitura_mes': 1885, 'mart_triagem_ia': 7}
+2026-11-12 21:12:25,246 INFO [cidadeviva] contagens no DW: {'dim_data': 316, 'dim_subprefeitura': 32, 'dim_categoria': 7, 'fato_solicitacao_sp156': 472524, 'fato_reporte': 400, 'mart_demanda_subprefeitura_mes': 1885, 'mart_triagem_ia': 7}
