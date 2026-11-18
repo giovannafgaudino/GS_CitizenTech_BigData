@@ -5,6 +5,7 @@ Cada fonte é gravada em data/bronze/<fonte>/dt=<data_execucao>/ junto com um _m
 """
 from __future__ import annotations
 
+import os
 import random
 import shutil
 import urllib.request
@@ -326,7 +327,8 @@ def ingerir_cidadeviva(ds: str) -> dict:
 
         url = f"{config.CIDADEVIVA_API_URL.rstrip('/')}/reportes/export?desde={ds}&ate={ds}"
         log.info("lendo reportes da API do app: %s", url)
-        with urllib.request.urlopen(url, timeout=60) as r:
+        req = urllib.request.Request(url, headers={"X-API-Key": os.getenv("CIDADEVIVA_API_KEY", "")})
+        with urllib.request.urlopen(req, timeout=60) as r:
             reportes = json.loads(r.read().decode("utf-8"))
         origem = url
     else:

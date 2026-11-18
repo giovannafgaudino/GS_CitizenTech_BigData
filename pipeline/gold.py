@@ -32,6 +32,7 @@ def _dim_data(datas: pd.Series) -> pd.DataFrame:
 def construir_gold(ds: str) -> dict:
     sp = ler(config.SILVER / "sp156" / f"dt={ds}" / "solicitacoes", parse_dates=["data_abertura", "data_parecer"])
     cv = ler(config.SILVER / "cidadeviva" / f"dt={ds}" / "reportes", parse_dates=["criado_em"])
+    cv["criado_em"] = pd.to_datetime(cv["criado_em"])  # dia sem reportes: garante datetime
     subs = pd.read_csv(config.SEEDS / "subprefeituras.csv")
     cats = pd.read_csv(config.SEEDS / "categorias.csv")
     cat_id = dict(zip(cats.codigo, cats.categoria_id))

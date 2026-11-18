@@ -11,6 +11,13 @@ Disciplina: Big Data Architecture & Data Integration · Atividade: Pipeline de D
 | Rafael de Almeida Sigoli | RM554019 |
 | Rafael Jorge Del Padre | RM552765 |
 
+**Links do projeto**
+
+| | |
+|---|---|
+| MVP no ar | https://citizentech-girafas.azurewebsites.net |
+| Repositório do MVP (Ficha Técnica, seção [Big Data](https://github.com/girafasfiap-cyber/GS_CitizenTech_MVP_Startup#bigdata)) | https://github.com/girafasfiap-cyber/GS_CitizenTech_MVP_Startup |
+
 Pipeline orquestrado (Apache Airflow) que coleta, trata e entrega os dados que alimentam o **CidadeViva**,
 plataforma colaborativa de zeladoria urbana. Todo o stack é gratuito/open-source (Python, pandas, Airflow, PostgreSQL).
 
@@ -18,8 +25,8 @@ plataforma colaborativa de zeladoria urbana. Todo o stack é gratuito/open-sourc
 
 | Fonte | Origem | Uso no MVP |
 |---|---|---|
-| **SP156** | Portal de Dados Abertos da Prefeitura de SP, obtido pela **API do portal (CKAN)** com os CSVs locais como alternativa (CSV trimestral, licença CC0) | Histórico real de demanda por subprefeitura/categoria → mapa de calor, priorização, tempo de resposta esperado |
-| **Reportes CidadeViva** | API de exportação do app (ou simulador, ver abaixo) | Triagem por IA (categoria + confiança), fila de revisão humana, envio pelo RPA |
+| **SP156** | Portal de Dados Abertos da Prefeitura de SP, obtido pela **API do portal (CKAN)** com os CSVs locais como alternativa (CSV trimestral, licença CC0) | Histórico real de demanda por subprefeitura/categoria → painel de demanda, priorização, tempo de resposta esperado |
+| **Reportes CidadeViva** | **API de exportação do app em produção** (`GET /reportes/export`, protegida por chave); simulador só quando a API não está configurada | Triagem por IA (categoria + confiança), fila de revisão humana, envio pelo RPA |
 | **Referências** | `seeds/` (subprefeituras, categorias, regras de classificação) | Dimensões e taxonomia única entre as duas fontes |
 
 ```
@@ -31,17 +38,55 @@ ingerir_referencias ─► (usadas pelas duas) ┘
 Arquitetura medallion: **bronze** (bruto, imutável, com manifest e hash) → **silver** (limpo e tipado) → **gold**
 (modelo dimensional) → **Data Warehouse PostgreSQL**. Detalhes e dicionário de dados no PDF da entrega.
 
+## Integração com o MVP (app em produção)
+
+O pipeline é **batch**: o app registra cada reporte na hora, e o pipeline o leva ao Data Warehouse quando roda
+(a DAG é `@daily`). As duas pontas da integração:
+
+| Sentido | Como funciona |
+|---|---|
+| **App → pipeline** | `ingerir_cidadeviva` chama `GET {CIDADEVIVA_API_URL}/reportes/export?desde=<ds>&ate=<ds>` com o cabeçalho `X-API-Key` (variável `CIDADEVIVA_API_KEY`). O filtro usa a data **em UTC** do reporte. |
+| **Pipeline → app** | O painel `/painel` do MVP lê um Data Warehouse SQLite enxuto (`dim_subprefeitura`, `dim_categoria`, `mart_demanda_subprefeitura_mes`), gerado a partir do DW completo pelo script `tools/enxugar_dw.py` do repositório do MVP e apontado por `DW_PATH`. |
+
+**Rastreabilidade.** Cada partição bronze registra no `_manifest.json` a origem e o número de registros. Na execução de
+entrega:
+
+| Data lógica | Origem do manifest | Registros |
+|---|---|---|
+| 2026-11-12 | simulador (execução anterior ao app no ar) | 408 |
+| 2026-11-13 | simulador (execução anterior ao app no ar) | 408 |
+| 2026-11-17 | `https://citizentech-girafas.azurewebsites.net/reportes/export?desde=2026-11-17&ate=2026-11-17` | 0 (dia sem reportes) |
+| 2026-11-18 | `https://citizentech-girafas.azurewebsites.net/reportes/export?desde=2026-11-18&ate=2026-11-18` | 1 (reporte real do app) |
+
+Resultado da carga com o app como fonte (`run_local.py --ds 2026-11-18`): `fato_solicitacao_sp156` = 472.524,
+`fato_reporte` = 1, `mart_demanda_subprefeitura_mes` = 1.885, 19 verificações de qualidade em `OK`, 99,5% das
+solicitações do SP156 com subprefeitura reconhecida.
+
+**Fuso horário.** O app grava `created_at` em UTC. Na silver, `criado_em` é convertido para o horário de Brasília e fica
+sem fuso, para casar com as datas do SP156. Por isso um reporte feito às 22h52 do dia 17 (Brasília) tem `data_id`
+20261117 no DW, mas é lido na partição `dt=2026-11-18` (data UTC).
+
 ## Como executar
 
 ### A) Com Airflow (Docker) — o caminho da entrega
 
 ```bash
 cp .env.example .env
+# edite o .env: CIDADEVIVA_API_URL e CIDADEVIVA_API_KEY (ver abaixo)
 docker compose up airflow-init
 docker compose up -d
 # Airflow:  http://localhost:8080   (admin / admin)  -> DAG "cidadeviva_pipeline" -> Trigger
 # Warehouse: psql -h localhost -p 5433 -U dw -d cidadeviva_dw   (senha: dw)
 ```
+
+Para ler os reportes do app em produção, defina no `.env` (a chave **não** vai para o Git: o `.env` está no `.gitignore`):
+
+```
+CIDADEVIVA_API_URL=https://citizentech-girafas.azurewebsites.net
+CIDADEVIVA_API_KEY=<chave do atendente do app>
+```
+
+O `docker-compose.yml` repassa as duas variáveis ao Airflow. Sem `CIDADEVIVA_API_URL`, o pipeline usa o simulador de reportes.
 
 O padrão é `SP156_MODE=real` com `SP156_FONTE=auto`: a task `ingerir_sp156` consulta a **API do portal de dados abertos (CKAN,
 `package_show`)**, descobre os CSVs trimestrais do ano da execução ("Dados do SP156 - n° TRI <ano>"), baixa e valida cada um
@@ -49,6 +94,11 @@ O padrão é `SP156_MODE=real` com `SP156_FONTE=auto`: a task `ingerir_sp156` co
 A fonte realmente usada (`api` ou `local`) e o erro da API, se houve, ficam no `_manifest.json` e no log da task.
 `SP156_FONTE=api` exige a API (sem fallback); `SP156_FONTE=local` usa só os CSVs locais; `SP156_ANO` força o ano.
 Após o *Trigger*, as 10 tasks devem ficar verdes e as tabelas aparecem no schema `public` do banco `cidadeviva_dw`.
+
+> **Na execução de entrega:** fora do Docker (`run_local.py`) a fonte foi a **API do portal** (`fonte_usada: api`,
+> `erro_api: null`). Dentro do Docker, a rede do ambiente reassina o HTTPS (`certificate verify failed: self-signed
+> certificate in certificate chain`), a API foi recusada e o pipeline usou o *fallback* dos CSVs, como projetado. A
+> verificação de certificado **não** foi desativada.
 
 ### B) Sem Airflow (rápido, usa SQLite) — com os dados reais
 
@@ -61,7 +111,9 @@ script). Os arquivos usados na entrega foram `arquivo-final-1/2/3-trim-26.csv`. 
 ```bash
 pip install -r requirements.txt
 export SP156_LOCAL_PATH="data/raw/arquivo-final-*-trim-26.csv"      # aceita glob, vários arquivos ou vírgulas
-python scripts/run_local.py --ds 2026-11-12                          # ~1 min, ~500 MB de RAM
+export CIDADEVIVA_API_URL=https://citizentech-girafas.azurewebsites.net   # opcional: sem isso usa o simulador
+export CIDADEVIVA_API_KEY=<chave do atendente>                            # opcional, necessária com a URL acima
+python scripts/run_local.py --ds 2026-11-18                         # ~2 min, ~500 MB de RAM
 sqlite3 data/cidadeviva_dw.sqlite < sql/consultas_exemplo.sql        # ou abra o .sqlite no DBeaver
 python docs/gerar_pdf.py                                             # regera o PDF (ABNT) com os números da SUA execução
 python docs/gerar_docx.py                                            # idem em Word (.docx)
@@ -70,6 +122,16 @@ pytest -q                                                            # 13 testes
 
 Teste rápido: `export SP156_MAX_ROWS=50000` (limita as linhas lidas de cada arquivo).
 Sem os CSVs (ex.: avaliador): `SP156_MODE=sample python scripts/run_local.py --ds 2026-11-12` usa a amostra **sintética**.
+
+### Problemas conhecidos na execução
+
+| Sintoma | Causa e solução |
+|---|---|
+| `failed to connect to the docker API` | O Docker Desktop não está rodando. Abra-o e espere "Engine running". |
+| `ingerir_sp156` falha com `SP156_LOCAL_PATH ... data/raw/...` dentro do Docker | O Docker Compose dá prioridade às variáveis **do terminal** sobre o `.env`. Rode `unset SP156_LOCAL_PATH` e `docker compose up -d --force-recreate`; o `.env` deve ter o caminho do container (`/opt/airflow/project/data/raw/...`). |
+| `API do portal indisponível ... CERTIFICATE_VERIFY_FAILED` | Rede com inspeção de TLS. O *fallback* para os CSVs locais cobre o caso; veja `fonte_usada` no manifest. |
+| `Não autorizado` ao ler o app | `CIDADEVIVA_API_KEY` ausente ou diferente da chave do app. |
+| Contagens duplicadas em `fato_reporte` / `mart_triagem_ia` | Essas tabelas acumulam **uma partição por data de execução** (SP156 é substituído por inteiro). Para contagens limpas numa demonstração, apague `data/cidadeviva_dw.sqlite` antes de rodar. |
 
 ## Evidências de execução
 
@@ -100,6 +162,9 @@ Os mesmos números aparecem no PDF [`docs/CidadeViva_Arquitetura_e_Dicionario_de
 * **Dados não trafegam por XCom** — o contrato entre tasks é o data lake em disco (Parquet quando há `pyarrow`).
 * **Qualidade como gate** — `validar_qualidade` (19 verificações: PK/FK, completude, domínio, coordenadas, LGPD) falha a
   DAG antes da carga se algo estiver errado. Relatório em `data/gold/dt=<ds>/_dq_report.json`.
+* **Dia sem reportes não é falha** — se o app responde e informa 0 registros (`registros: 0` no manifest da ingestão), a silver
+  é gravada vazia e o gate aceita `fato_reporte` vazio. Um `fato_reporte` vazio **sem** essa confirmação do app continua
+  falhando, para não esconder uma ingestão quebrada.
 * **LGPD** — nome/e-mail do cidadão nunca chegam à silver: o usuário vira `usuario_hash` (SHA-256 + salt) e telefone/CPF/e-mail
   digitados na descrição são mascarados.
 * **IA responsável** — reportes com confiança < 0,70 (ou sem categoria válida) recebem `requer_revisao_humana = 1`;
@@ -118,9 +183,12 @@ Os mesmos números aparecem no PDF [`docs/CidadeViva_Arquitetura_e_Dicionario_de
 
 * **SP156: dados reais** (Portal de Dados Abertos da PMSP, CC0) — é o comportamento padrão. A amostra sintética
   `data/sample/sp156_amostra.csv` existe **somente para os testes automatizados** (`SP156_MODE=sample`).
-* **Reportes do CidadeViva: simulados** enquanto `CIDADEVIVA_API_URL` não estiver definido, porque o app ainda não tem
-  usuários reais. O simulador injeta sujeira de propósito (duplicados, lat/lon invertidos, PII no texto). Com a API
-  (ou um JSON exportado do app no mesmo contrato, ver `ingest._simular_reportes`), nada mais muda.
+* **Reportes do CidadeViva: reais a partir de 17/11/2026**, lidos do app em produção. Os reportes do app ainda são de
+  **teste** (não há usuários reais), e as partições anteriores (12 e 13/11) vieram do **simulador**, que injeta sujeira de propósito
+  (duplicados, lat/lon invertidos, PII no texto). O manifest de cada partição diz de onde veio.
+* **Carga no Postgres do Airflow e no SQLite do painel** são caminhos separados: o Airflow carrega o PostgreSQL (arquitetura de
+  produção) e o `run_local.py` carrega o SQLite, de onde sai o DW enxuto do painel do MVP. A cópia do arquivo para o servidor é
+  manual; em produção o painel leria o Postgres.
 * Os centroides em `seeds/subprefeituras.csv` são **aproximados** (didáticos), não limites oficiais do GeoSampa.
 * As regras de classificação do SP156 (`seeds/regras_categoria_sp156.csv`) são lexicais e foram escritas sem acesso ao
   catálogo completo de serviços: confira `_stats.json` e a contagem por categoria após a primeira execução real.

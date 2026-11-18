@@ -18,6 +18,7 @@ x-airflow-common: &airflow-common
     SP156_LOCAL_PATH: ${SP156_LOCAL_PATH:-}
     HASH_SALT: ${HASH_SALT:-cidadeviva-dev-salt}
     CIDADEVIVA_API_URL: ${CIDADEVIVA_API_URL:-}
+    CIDADEVIVA_API_KEY: ${CIDADEVIVA_API_KEY:-}
     PYTHONPATH: /opt/airflow/project
   volumes:
     - ./dags:/opt/airflow/dags

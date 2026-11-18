@@ -223,6 +223,25 @@ def silver_cidadeviva(ds: str) -> dict:
     bruto = json.loads((config.BRONZE / "cidadeviva" / f"dt={ds}" / "reportes.json").read_text(encoding="utf-8"))
     df = pd.json_normalize(bruto, sep="_")
     lidas = len(df)
+    if df.empty:  # dia sem reportes no app: grava silver vazio (tipos certos) em vez de falhar
+        vazio = pd.DataFrame({
+            "id_reporte": pd.Series(dtype="object"), "criado_em": pd.Series(dtype="datetime64[ns]"),
+            "canal": pd.Series(dtype="object"), "descricao": pd.Series(dtype="object"),
+            "possui_foto": pd.Series(dtype="bool"), "logradouro": pd.Series(dtype="object"),
+            "numero": pd.Series(dtype="string"), "cep": pd.Series(dtype="object"),
+            "subprefeitura_id": pd.Series(dtype="Int64"), "latitude": pd.Series(dtype="float64"),
+            "longitude": pd.Series(dtype="float64"), "categoria_ia": pd.Series(dtype="object"),
+            "confianca_ia": pd.Series(dtype="float64"), "modelo_ia": pd.Series(dtype="object"),
+            "requer_revisao_humana": pd.Series(dtype="bool"), "status_app": pd.Series(dtype="object"),
+            "status": pd.Series(dtype="object"), "protocolo_prefeitura": pd.Series(dtype="object"),
+            "usuario_hash": pd.Series(dtype="object"), "dt_ingestao": pd.Series(dtype="object"),
+        })
+        gravar(vazio, config.SILVER / "cidadeviva" / f"dt={ds}" / "reportes")
+        stats = {"linhas_lidas": 0, "duplicadas_removidas": 0, "latlon_invertidos_corrigidos": 0,
+                 "coordenadas_ausentes_ou_invalidas": 0, "revisao_humana": 0, "linhas_silver": 0}
+        gravar_json(stats, config.SILVER / "cidadeviva" / f"dt={ds}" / "_stats.json")
+        log.info("CidadeViva silver: nenhum reporte em %s: %s", ds, stats)
+        return stats
     subs = _ref_subprefeituras(ds)
     cats_validas = set(pd.read_csv(config.SEEDS / "categorias.csv").codigo)
 
@@ -238,7 +257,7 @@ def silver_cidadeviva(ds: str) -> dict:
 
     out = pd.DataFrame({
         "id_reporte": df.id,
-        "criado_em": pd.to_datetime(df.created_at, errors="coerce"),
+        "criado_em": pd.to_datetime(df.created_at, errors="coerce", utc=True).dt.tz_convert("America/Sao_Paulo").dt.tz_localize(None),
         "canal": df.canal.str.lower(),
         "descricao": df.descricao.map(mascarar_pii),
         "possui_foto": df.foto_url.notna(),

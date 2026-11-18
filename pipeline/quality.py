@@ -1,6 +1,8 @@
 """Verificações de qualidade (data quality gates). Falha => a task do Airflow falha e nada é carregado."""
 from __future__ import annotations
 
+import json
+
 import pandas as pd
 
 from . import config
@@ -25,7 +27,10 @@ def validar_gold(ds: str) -> dict:
 
     f_sp, f_cv = t["fato_solicitacao_sp156"], t["fato_reporte"]
     check("fato_solicitacao_sp156 não vazia", len(f_sp) > 0, f"{len(f_sp)} linhas")
-    check("fato_reporte não vazia", len(f_cv) > 0, f"{len(f_cv)} linhas")
+    # dia sem reportes vale se o app respondeu e informou 0 registros (manifest); vazio sem essa prova = falha
+    man = config.BRONZE / "cidadeviva" / f"dt={ds}" / "_manifest.json"
+    dia_vazio_confirmado = man.exists() and json.loads(man.read_text(encoding="utf-8")).get("registros") == 0
+    check("fato_reporte não vazia (ou dia sem reportes confirmado pelo app)", len(f_cv) > 0 or dia_vazio_confirmado, f"{len(f_cv)} linhas")
     check("PK única em fato_solicitacao_sp156", f_sp.solicitacao_id.is_unique)
     check("PK única em fato_reporte", f_cv.reporte_id.is_unique)
     check("PK única em dim_subprefeitura", t["dim_subprefeitura"].subprefeitura_id.is_unique)
