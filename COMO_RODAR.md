@@ -30,7 +30,7 @@ e `contagens no DW: {... 'fato_solicitacao_sp156': 472524 ...}`.
 
 ## 3) Ver os dados e testar
 - Abra `data/cidadeviva_dw.sqlite` no **DBeaver** (SQLite) ou rode: `sqlite3 data/cidadeviva_dw.sqlite < sql/consultas_exemplo.sql`
-- `pytest -q tests → 13 testes passando.
+- `pytest -q tests` → 13 testes passando.
 - Estatísticas da classificação: `data/silver/sp156/dt=2026-11-12/_stats.json` (também em `docs/`).
 
 ## 4) PDF da entrega
