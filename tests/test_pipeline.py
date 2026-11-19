@@ -62,7 +62,7 @@ def test_csv_em_cp1252_e_arquivo_local(tmp_path, monkeypatch):
     src = (root / "data/sample/sp156_amostra.csv").read_text(encoding="utf-8")
     arq = tmp_path / "sp156_cp1252.csv"
     arq.write_bytes(src.encode("cp1252"))
-    for k, v in dict(DATA_DIR=str(tmp_path / "lake"), SP156_MODE="real", SP156_LOCAL_PATH=str(arq),
+    for k, v in dict(DATA_DIR=str(tmp_path / "lake"), SP156_MODE="real", SP156_FONTE="local", SP156_LOCAL_PATH=str(arq),
                      WAREHOUSE_URL=f"sqlite:///{tmp_path/'dw.sqlite'}").items():
         monkeypatch.setenv(k, v)
     for m in [m for m in sys.modules if m.startswith("pipeline")]:
@@ -108,7 +108,7 @@ def test_layout_real_2026(tmp_path, monkeypatch):
     (pasta / "arquivo-final-1-trim-26.csv").write_bytes("\r\n".join([CAB] + Q1).encode("cp1252"))
     (pasta / "arquivo-final-2-trim-26.csv").write_bytes("\r\n".join([CAB] + Q2).encode("cp1252"))
     (pasta / "arquivo-final-3-trim-26.csv").write_bytes("\r\n".join([CAB.replace(";", ",")] + Q3).encode("utf-8"))
-    for k, v in dict(DATA_DIR=str(tmp_path / "lake"), SP156_MODE="real", SP156_LOCAL_PATH=str(pasta / "arquivo-final-*-trim-26.csv"),
+    for k, v in dict(DATA_DIR=str(tmp_path / "lake"), SP156_MODE="real", SP156_FONTE="local", SP156_LOCAL_PATH=str(pasta / "arquivo-final-*-trim-26.csv"),
                      SP156_MAX_ROWS="", WAREHOUSE_URL=f"sqlite:///{tmp_path/'dw.sqlite'}").items():
         monkeypatch.setenv(k, v)
     for m in [m for m in sys.modules if m.startswith("pipeline")]:

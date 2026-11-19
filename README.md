@@ -123,7 +123,7 @@ Coloque os CSVs do SP156 em `data/raw/` (eles são o *fallback* e **não** vão 
 pip install -r requirements.txt
 export SP156_LOCAL_PATH="data/raw/arquivo-final-*-trim-26.csv"
 python scripts/run_local.py --ds 2026-11-18
-pytest -q                      # 21 testes
+pytest -q                      # 13 testes
 python docs/gerar_pdf.py       # regera o PDF com os números da sua execução
 python docs/gerar_docx.py      # idem em Word
 ```
@@ -178,7 +178,7 @@ seeds/                        subprefeituras, categorias, regras de classificaç
 data/sample/                  amostra sintética (só testes)
 scripts/                      run_local.py e utilitários
 sql/consultas_exemplo.sql     consultas que o MVP executa
-tests/                        21 testes (utilitários, pipeline ponta a ponta, idempotência, integração com o app)
+tests/                        13 testes (utilitários, pipeline ponta a ponta, idempotência, integração com o app)
 docs/                         PDF/Word, gerador (conteudo.py + gerar_pdf.py + gerar_docx.py), diagramas, evidências
 docker-compose.yml            Airflow + Postgres (metadados) + Postgres (DW)
 ```
