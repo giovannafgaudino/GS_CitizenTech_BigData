@@ -3,7 +3,7 @@
 Você precisa de: **Python 3.10+** e **Git Bash** (já tem). Só a parte do Airflow exige **Docker Desktop**.
 
 ## 1) Preparar a pasta
-1. Extraia o zip numa pasta e abra o **Git Bash dentro dela** (clique direito > *Open Git Bash here*).
+1. Clone o repositório.
 2. Coloque os 3 CSVs do SP156 (que você baixou do portal) em **`data/raw/`**. Eles são o *fallback*: no Airflow o pipeline tenta
    primeiro a API do portal (`SP156_FONTE=auto`) e só usa estes arquivos se a API falhar; no `run_local.py` abaixo, `SP156_LOCAL_PATH` os usa direto:
    `arquivo-final-1-trim-26.csv`, `arquivo-final-2-trim-26.csv`, `arquivo-final-3-trim-26.csv`.
@@ -30,7 +30,7 @@ e `contagens no DW: {... 'fato_solicitacao_sp156': 472524 ...}`.
 
 ## 3) Ver os dados e testar
 - Abra `data/cidadeviva_dw.sqlite` no **DBeaver** (SQLite) ou rode: `sqlite3 data/cidadeviva_dw.sqlite < sql/consultas_exemplo.sql`
-- `pytest -q` → 13 testes passando.
+- `pytest -q tests → 13 testes passando.
 - Estatísticas da classificação: `data/silver/sp156/dt=2026-11-12/_stats.json` (também em `docs/`).
 
 ## 4) PDF da entrega
@@ -47,8 +47,7 @@ docker compose up -d
 1. Abra http://localhost:8080 (usuário `admin`, senha `admin`) → DAG **cidadeviva_pipeline** → botão ▶ *Trigger DAG*.
 2. Tire print do **Graph** com as 10 tasks verdes, de um **log** de task (ex.: `validar_qualidade`) e das **tabelas no banco**
    (DBeaver → PostgreSQL, host `localhost`, porta `5433`, banco `cidadeviva_dw`, usuário `dw`, senha `dw`).
-3. A carga no Postgres/Airflow **não foi testada pelo autor** (o ambiente dele não tinha Docker). Se falhar, copie o log da task e peça ajuste.
-Para parar: `docker compose down`.
+
 
 ## 6) Entrega (prazo 19/11, 23h55)
 1. Suba a pasta para um repositório **público** no GitHub (os CSVs em `data/raw/` já são ignorados pelo `.gitignore`).

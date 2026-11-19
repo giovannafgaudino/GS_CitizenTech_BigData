@@ -14,7 +14,6 @@ Disciplina: Big Data Architecture & Data Integration · Prof.ª Ana Machado · A
 | MVP no ar | https://citizentech-girafas.azurewebsites.net |
 | Repositório do MVP | https://github.com/girafasfiap-cyber/GS_CitizenTech_MVP_Startup |
 | Documento da entrega (PDF, ABNT) | [`docs/CidadeViva_Arquitetura_e_Dicionario_de_Dados.pdf`](docs/CidadeViva_Arquitetura_e_Dicionario_de_Dados.pdf) |
-| Mesmo documento em Word | [`docs/CidadeViva_Arquitetura_e_Dicionario_de_Dados.docx`](docs/CidadeViva_Arquitetura_e_Dicionario_de_Dados.docx) |
 
 ## Em uma frase
 
@@ -124,8 +123,6 @@ pip install -r requirements.txt
 export SP156_LOCAL_PATH="data/raw/arquivo-final-*-trim-26.csv"
 python scripts/run_local.py --ds 2026-11-18
 pytest -q                      # 13 testes
-python docs/gerar_pdf.py       # regera o PDF com os números da sua execução
-python docs/gerar_docx.py      # idem em Word
 ```
 
 Sem os CSVs (ex.: avaliador): `SP156_MODE=sample python scripts/run_local.py --ds 2026-11-12` usa a amostra **sintética**.
@@ -172,13 +169,17 @@ Sem os CSVs (ex.: avaliador): `SP156_MODE=sample python scripts/run_local.py --d
 ## Estrutura
 
 ```
+## Estrutura
+
+```
 dags/cidadeviva_pipeline.py   DAG do Airflow
 pipeline/                     ingest · transform · gold · quality · load · config · utils
 seeds/                        subprefeituras, categorias, regras de classificação
 data/sample/                  amostra sintética (só testes)
 scripts/                      run_local.py e utilitários
 sql/consultas_exemplo.sql     consultas que o MVP executa
-tests/                        13 testes (utilitários, pipeline ponta a ponta, idempotência, integração com o app)
-docs/                         PDF/Word, gerador (conteudo.py + gerar_pdf.py + gerar_docx.py), diagramas, evidências
+tests/                        13 testes (utilitários, pipeline ponta a ponta, idempotência)
+docs/                         PDF da entrega, gerar_pdf.py (rascunho), diagramas, evidências
 docker-compose.yml            Airflow + Postgres (metadados) + Postgres (DW)
+pytest.ini                    faz o pytest rodar só a pasta tests/
 ```
